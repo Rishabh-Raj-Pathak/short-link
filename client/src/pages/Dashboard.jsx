@@ -2,6 +2,94 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { linksApi } from "../utils/api";
 
+// Dummy data for dashboard demonstration
+const DUMMY_LINKS = [
+  {
+    id: "1",
+    shortUrl: "https://short.ly/jkl012",
+    longUrl:
+      "https://www.social-media.com/viral-content-strategy-guide-2024-latest-trends",
+    dateCreated: "2024-05-12",
+    totalClicks: 543,
+    performancePercent: 18,
+    monthlyClicks: [
+      { month: "2024-01", clicks: 45 },
+      { month: "2024-02", clicks: 67 },
+      { month: "2024-03", clicks: 89 },
+      { month: "2024-04", clicks: 156 },
+      { month: "2024-05", clicks: 186 },
+      { month: "2024-06", clicks: 203 },
+    ],
+  },
+  {
+    id: "2",
+    shortUrl: "https://short.ly/ghi789",
+    longUrl:
+      "https://www.blog.example.com/how-to-optimize-conversion-rates-for-ecommerce",
+    dateCreated: "2024-04-05",
+    totalClicks: 856,
+    performancePercent: 29,
+    monthlyClicks: [
+      { month: "2024-01", clicks: 78 },
+      { month: "2024-02", clicks: 112 },
+      { month: "2024-03", clicks: 145 },
+      { month: "2024-04", clicks: 167 },
+      { month: "2024-05", clicks: 189 },
+      { month: "2024-06", clicks: 165 },
+    ],
+  },
+  {
+    id: "3",
+    shortUrl: "https://short.ly/abc123",
+    longUrl:
+      "https://www.tech-news.com/artificial-intelligence-breakthrough-2024",
+    dateCreated: "2024-03-18",
+    totalClicks: 1247,
+    performancePercent: 42,
+    monthlyClicks: [
+      { month: "2024-01", clicks: 134 },
+      { month: "2024-02", clicks: 189 },
+      { month: "2024-03", clicks: 223 },
+      { month: "2024-04", clicks: 267 },
+      { month: "2024-05", clicks: 234 },
+      { month: "2024-06", clicks: 200 },
+    ],
+  },
+  {
+    id: "4",
+    shortUrl: "https://short.ly/def456",
+    longUrl: "https://www.marketing-hub.com/email-automation-best-practices",
+    dateCreated: "2024-02-22",
+    totalClicks: 672,
+    performancePercent: 23,
+    monthlyClicks: [
+      { month: "2024-01", clicks: 56 },
+      { month: "2024-02", clicks: 89 },
+      { month: "2024-03", clicks: 123 },
+      { month: "2024-04", clicks: 145 },
+      { month: "2024-05", clicks: 134 },
+      { month: "2024-06", clicks: 125 },
+    ],
+  },
+  {
+    id: "5",
+    shortUrl: "https://short.ly/xyz789",
+    longUrl:
+      "https://www.finance-today.com/cryptocurrency-investment-guide-beginners",
+    dateCreated: "2024-01-15",
+    totalClicks: 934,
+    performancePercent: 31,
+    monthlyClicks: [
+      { month: "2024-01", clicks: 89 },
+      { month: "2024-02", clicks: 134 },
+      { month: "2024-03", clicks: 167 },
+      { month: "2024-04", clicks: 178 },
+      { month: "2024-05", clicks: 189 },
+      { month: "2024-06", clicks: 177 },
+    ],
+  },
+];
+
 const Dashboard = () => {
   const { user, logout } = useAuth();
   const [selectedLink, setSelectedLink] = useState(null);
@@ -12,8 +100,8 @@ const Dashboard = () => {
     from: "2024-01",
     to: "2024-12",
   });
-  const [links, setLinks] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [links, setLinks] = useState(DUMMY_LINKS);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   // Fetch links from backend
@@ -135,15 +223,22 @@ const Dashboard = () => {
     const stats = calculateStats(selectedLink);
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 pattern-geometric">
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 pattern-geometric relative overflow-hidden">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 left-10 w-32 h-32 bg-purple-200/20 rounded-full animate-float"></div>
+          <div className="absolute top-40 right-20 w-24 h-24 bg-blue-200/20 rounded-full animate-float-slow"></div>
+          <div className="absolute bottom-32 left-1/4 w-40 h-40 bg-pink-200/20 rounded-full animate-blob"></div>
+        </div>
+
         {/* Header */}
-        <header className="relative z-20 bg-white/80 backdrop-blur-sm border-b border-gray-200/50">
+        <header className="relative z-20 bg-white/80 backdrop-blur-md border-b border-gray-200/50 shadow-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center py-4">
+            <div className="flex justify-between items-center py-6">
               <div className="flex items-center space-x-4">
                 <button
                   onClick={() => setSelectedLink(null)}
-                  className="flex items-center space-x-2 text-gray-600 hover:text-gray-800 transition-colors"
+                  className="flex items-center space-x-3 text-gray-600 hover:text-[#8039DF] transition-all duration-300 bg-white/50 rounded-xl px-4 py-3 hover:bg-white/80 shadow-sm"
                 >
                   <svg
                     className="w-5 h-5"
@@ -158,20 +253,25 @@ const Dashboard = () => {
                       d="M15 19l-7-7 7-7"
                     />
                   </svg>
-                  <span>Back to Dashboard</span>
+                  <span className="font-semibold">Back to Dashboard</span>
                 </button>
-                <div className="h-6 w-px bg-gray-300"></div>
-                <h1 className="text-xl font-bold text-gray-900">
-                  Link Analytics
-                </h1>
+                <div className="h-8 w-px bg-gray-300"></div>
+                <div>
+                  <h1 className="text-2xl font-bold bg-gradient-to-r from-[#8039DF] to-[#667eea] bg-clip-text text-transparent">
+                    Link Analytics
+                  </h1>
+                  <p className="text-sm text-gray-600 font-medium">
+                    Total performance overview
+                  </p>
+                </div>
               </div>
               <div className="flex items-center space-x-4">
-                <span className="text-gray-600 text-sm">
+                <span className="text-gray-600 text-sm font-medium">
                   Hello, {user?.email}
                 </span>
                 <button
                   onClick={handleLogout}
-                  className="text-gray-600 hover:text-gray-800 transition-colors font-medium"
+                  className="text-gray-600 hover:text-[#8039DF] transition-all duration-300 font-semibold"
                 >
                   Logout
                 </button>
@@ -181,46 +281,63 @@ const Dashboard = () => {
         </header>
 
         {/* Analytics View */}
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
           {/* Link Info Section */}
-          <div className="card scroll-animate mb-8">
+          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20 scroll-animate mb-8">
             <div className="flex flex-col lg:flex-row gap-8">
               <div className="flex-1">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                  Link Overview
-                </h2>
-
-                {/* Short URL */}
-                <div className="mb-6">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Short URL
-                  </label>
-                  <div className="flex items-center bg-gray-50 rounded-lg p-4">
-                    <span className="text-[#8039DF] font-semibold text-lg flex-1 mr-4">
-                      {selectedLink.shortUrl}
-                    </span>
-                    <button
-                      onClick={() => copyToClipboard(selectedLink.shortUrl)}
-                      className="btn-secondary py-2 px-4 text-sm mr-2"
+                <div className="flex items-center space-x-3 mb-8">
+                  <div className="w-3 h-8 bg-gradient-to-b from-[#8039DF] to-[#667eea] rounded-full"></div>
+                  <h2 className="text-3xl font-bold text-gray-900">
+                    {selectedLink.shortUrl.replace("https://", "")}
+                  </h2>
+                  <button
+                    onClick={() => copyToClipboard(selectedLink.shortUrl)}
+                    className="text-gray-400 hover:text-[#8039DF] hover:bg-purple-50 transition-all duration-300 p-2 rounded-lg"
+                    title="Copy link"
+                  >
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
                     >
-                      📋 Copy
-                    </button>
-                    <button
-                      onClick={() => openInNewTab(selectedLink.shortUrl)}
-                      className="btn-primary py-2 px-4 text-sm"
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={() => openInNewTab(selectedLink.shortUrl)}
+                    className="text-gray-400 hover:text-[#8039DF] hover:bg-purple-50 transition-all duration-300 p-2 rounded-lg"
+                    title="Open in new tab"
+                  >
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
                     >
-                      🔗 Open
-                    </button>
-                  </div>
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                      />
+                    </svg>
+                  </button>
                 </div>
 
                 {/* Original URL */}
                 <div className="mb-6">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-3">
                     Original URL
                   </label>
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <p className="text-gray-800 break-all">
+                  <div className="bg-gray-50/80 rounded-xl p-4 border border-gray-200/50">
+                    <p className="text-gray-800 break-all font-medium">
                       {selectedLink.longUrl}
                     </p>
                   </div>
@@ -228,10 +345,10 @@ const Dashboard = () => {
 
                 {/* Creation Date */}
                 <div className="mb-6">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-3">
                     Created
                   </label>
-                  <p className="text-gray-800">
+                  <p className="text-gray-800 font-semibold text-lg">
                     {new Date(selectedLink.dateCreated).toLocaleDateString(
                       "en-US",
                       {
@@ -245,21 +362,34 @@ const Dashboard = () => {
               </div>
 
               {/* QR Code */}
-              <div className="lg:w-64">
-                <div className="text-center bg-white border-2 border-gray-100 rounded-xl p-6 shadow-lg">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    QR Code
+              <div className="lg:w-72">
+                <div className="text-center bg-gradient-to-br from-white to-gray-50/50 border-2 border-gray-100/50 rounded-2xl p-6 shadow-xl">
+                  <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center justify-center space-x-2">
+                    <svg
+                      className="w-6 h-6 text-[#8039DF]"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"
+                      />
+                    </svg>
+                    <span>QR Code</span>
                   </h3>
-                  <div className="bg-white p-4 rounded-lg mb-4 inline-block shadow-sm border">
+                  <div className="bg-white p-6 rounded-2xl mb-6 inline-block shadow-lg border-2 border-gray-100">
                     <img
-                      src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(
                         selectedLink.shortUrl
                       )}`}
                       alt="QR Code"
-                      className="w-40 h-40"
+                      className="w-44 h-44"
                     />
                   </div>
-                  <button className="btn-primary w-full text-sm">
+                  <button className="btn-primary w-full text-sm font-semibold">
                     📱 Download PNG
                   </button>
                 </div>
@@ -268,95 +398,128 @@ const Dashboard = () => {
           </div>
 
           {/* Stats Section */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
-            {[
-              {
-                label: "Total Clicks",
-                value: selectedLink.totalClicks.toLocaleString(),
-                icon: "👆",
-                color: "bg-blue-500",
-              },
-              {
-                label: "% Change",
-                value: `${stats.changePercent > 0 ? "+" : ""}${
-                  stats.changePercent
-                }%`,
-                icon: "📈",
-                color: stats.changePercent >= 0 ? "bg-green-500" : "bg-red-500",
-              },
-              {
-                label: "Avg Monthly",
-                value: stats.avgMonthly.toLocaleString(),
-                icon: "📊",
-                color: "bg-purple-500",
-              },
-              {
-                label: "Peak Month",
-                value: stats.peakMonth.month.slice(-2),
-                icon: "🏆",
-                color: "bg-yellow-500",
-              },
-              {
-                label: "Growth Rate",
-                value: `${stats.growth > 0 ? "+" : ""}${stats.growth}%`,
-                icon: "🚀",
-                color: stats.growth >= 0 ? "bg-emerald-500" : "bg-orange-500",
-              },
-            ].map((stat, index) => (
-              <div
-                key={index}
-                className="card scroll-animate hover:scale-105 transition-transform duration-300"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="flex items-center">
-                  <div
-                    className={`w-12 h-12 ${stat.color} rounded-full flex items-center justify-center text-white text-xl mr-4`}
+          <div className="mb-8">
+            <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+              <div className="w-3 h-6 bg-gradient-to-b from-[#8039DF] to-[#667eea] rounded-full mr-3"></div>
+              Total performance overview
+            </h3>
+
+            <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 scroll-animate">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <p className="text-5xl font-bold text-gray-900 mb-2">
+                    {selectedLink.totalClicks.toLocaleString()}
+                  </p>
+                  <p className="text-lg text-gray-600 font-medium">
+                    Total Clicks
+                  </p>
+                </div>
+                <div className="flex items-center space-x-2 bg-green-50 px-4 py-2 rounded-xl">
+                  <svg
+                    className="w-5 h-5 text-green-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    {stat.icon}
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold text-gray-900">
-                      {stat.value}
-                    </p>
-                    <p className="text-sm text-gray-600">{stat.label}</p>
-                  </div>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                    />
+                  </svg>
+                  <span className="text-green-600 font-bold">
+                    +{Math.abs(stats.changePercent)}% from last month
+                  </span>
                 </div>
               </div>
-            ))}
+
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                {[
+                  {
+                    label: "Average Monthly Clicks",
+                    value: stats.avgMonthly.toLocaleString(),
+                    icon: "📊",
+                    color: "from-purple-500 to-purple-600",
+                  },
+                  {
+                    label: "Peak Month",
+                    value: stats.peakMonth.month.slice(-3),
+                    icon: "🏆",
+                    color: "from-yellow-500 to-orange-500",
+                  },
+                  {
+                    label: "Growth Rate",
+                    value: `+${Math.abs(stats.growth)}%`,
+                    icon: "🚀",
+                    color: "from-emerald-500 to-green-600",
+                  },
+                  {
+                    label: "Monthly View",
+                    value: "Monthly",
+                    icon: "📅",
+                    color: "from-blue-500 to-blue-600",
+                  },
+                ].map((stat, index) => (
+                  <div
+                    key={index}
+                    className="bg-gradient-to-br from-white to-gray-50/50 rounded-xl p-5 shadow-md border border-gray-100/50 hover:shadow-lg transition-all duration-300"
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <div
+                        className={`w-12 h-12 bg-gradient-to-r ${stat.color} rounded-xl flex items-center justify-center text-white text-xl shadow-lg`}
+                      >
+                        {stat.icon}
+                      </div>
+                    </div>
+                    <p className="text-2xl font-bold text-gray-900 mb-1">
+                      {stat.value}
+                    </p>
+                    <p className="text-sm text-gray-600 font-medium">
+                      {stat.label}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* Chart Section */}
-          <div className="card scroll-animate">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4 lg:mb-0">
-                Performance Over Time
-              </h3>
+          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20 scroll-animate">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
+              <div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2 flex items-center">
+                  <div className="w-3 h-6 bg-gradient-to-b from-[#8039DF] to-[#667eea] rounded-full mr-3"></div>
+                  Performance Over Time
+                </h3>
+                <p className="text-gray-600 font-medium">Monthly View</p>
+              </div>
 
               {/* Filters */}
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-4 mt-4 lg:mt-0">
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="input-field text-sm py-2"
+                  className="px-4 py-3 bg-gray-50/80 border-2 border-gray-200/50 rounded-xl focus:outline-none focus:border-[#8039DF] focus:bg-white transition-all duration-300 text-gray-900 font-medium"
                 >
-                  <option value="dateCreated">Date Created</option>
-                  <option value="totalClicks">Top Performing</option>
+                  <option value="dateCreated">📅 Date Created</option>
+                  <option value="totalClicks">🔥 Top Performing</option>
                 </select>
 
                 <select
                   value={viewMode}
                   onChange={(e) => setViewMode(e.target.value)}
-                  className="input-field text-sm py-2"
+                  className="px-4 py-3 bg-gray-50/80 border-2 border-gray-200/50 rounded-xl focus:outline-none focus:border-[#8039DF] focus:bg-white transition-all duration-300 text-gray-900 font-medium"
                 >
-                  <option value="monthly">Monthly</option>
-                  <option value="yearly">Yearly</option>
+                  <option value="monthly">📊 Monthly</option>
+                  <option value="yearly">📈 Yearly</option>
                 </select>
               </div>
             </div>
 
-            {/* Simple Chart */}
-            <div className="bg-gray-50 rounded-lg p-6">
-              <div className="flex items-end justify-between h-64 space-x-2">
+            {/* Enhanced Chart */}
+            <div className="bg-gradient-to-br from-gray-50/80 to-white rounded-2xl p-8 border border-gray-100/50">
+              <div className="flex items-end justify-between h-80 space-x-3">
                 {selectedLink.monthlyClicks.map((month, index) => {
                   const maxClicks = Math.max(
                     ...selectedLink.monthlyClicks.map((m) => m.clicks)
@@ -368,27 +531,54 @@ const Dashboard = () => {
                       key={index}
                       className="flex-1 flex flex-col items-center group cursor-pointer"
                     >
-                      <div className="relative">
-                        {/* Tooltip */}
-                        <div className="absolute -top-16 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded-lg px-3 py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                          {month.month}: {month.clicks} clicks
-                          <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
+                      <div className="relative w-full">
+                        {/* Enhanced Tooltip */}
+                        <div className="absolute -top-20 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-[#8039DF] to-[#667eea] text-white text-sm rounded-xl px-4 py-3 opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap z-20 shadow-xl">
+                          <div className="font-bold">{month.month}</div>
+                          <div className="text-xs opacity-90">
+                            {month.clicks.toLocaleString()} clicks
+                          </div>
+                          <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-[#8039DF]"></div>
                         </div>
 
-                        {/* Bar */}
+                        {/* Enhanced Bar */}
                         <div
-                          className="w-full bg-gradient-to-t from-[#8039DF] to-[#667eea] rounded-t-lg transition-all duration-300 group-hover:shadow-lg group-hover:scale-105 min-h-[8px]"
-                          style={{ height: `${Math.max(height, 5)}%` }}
-                        ></div>
+                          className="w-full bg-gradient-to-t from-[#8039DF] via-[#8d52e8] to-[#667eea] rounded-t-xl transition-all duration-500 group-hover:shadow-2xl group-hover:shadow-purple-300/50 group-hover:scale-105 min-h-[12px] relative overflow-hidden"
+                          style={{ height: `${Math.max(height, 8)}%` }}
+                        >
+                          {/* Shimmer effect */}
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-pulse"></div>
+
+                          {/* Top glow */}
+                          <div className="absolute top-0 left-0 right-0 h-2 bg-white/30 rounded-t-xl"></div>
+                        </div>
                       </div>
 
-                      {/* Month Label */}
-                      <span className="text-xs text-gray-600 mt-2 transform -rotate-45 origin-center">
-                        {month.month.slice(-2)}
+                      {/* Enhanced Month Label */}
+                      <span className="text-sm font-semibold text-gray-600 mt-4 group-hover:text-[#8039DF] transition-colors duration-300">
+                        {month.month.slice(-3)}
                       </span>
                     </div>
                   );
                 })}
+              </div>
+
+              {/* Chart Footer */}
+              <div className="mt-6 pt-4 border-t border-gray-200/50">
+                <div className="flex justify-between items-center text-sm text-gray-600">
+                  <span className="font-medium">
+                    Showing data from {selectedLink.monthlyClicks[0]?.month} to{" "}
+                    {
+                      selectedLink.monthlyClicks[
+                        selectedLink.monthlyClicks.length - 1
+                      ]?.month
+                    }
+                  </span>
+                  <span className="font-semibold">
+                    Peak: {stats.peakMonth.month} ({stats.peakMonth.clicks}{" "}
+                    clicks)
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -398,15 +588,22 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 pattern-geometric">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 pattern-geometric relative overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-32 h-32 bg-purple-200/20 rounded-full animate-float"></div>
+        <div className="absolute top-40 right-20 w-24 h-24 bg-blue-200/20 rounded-full animate-float-slow"></div>
+        <div className="absolute bottom-32 left-1/4 w-40 h-40 bg-pink-200/20 rounded-full animate-blob"></div>
+      </div>
+
       {/* Header */}
-      <header className="relative z-20 bg-white/80 backdrop-blur-sm border-b border-gray-200/50">
+      <header className="relative z-20 bg-white/80 backdrop-blur-md border-b border-gray-200/50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
+          <div className="flex justify-between items-center py-6">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gradient-primary rounded-xl flex items-center justify-center shadow-lg">
                 <svg
-                  className="w-5 h-5 text-white"
+                  className="w-6 h-6 text-white"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -417,15 +614,22 @@ const Dashboard = () => {
                   />
                 </svg>
               </div>
-              <h1 className="text-xl font-bold text-gray-900">Dashboard</h1>
+              <div>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-[#8039DF] to-[#667eea] bg-clip-text text-transparent">
+                  URL Analytics Dashboard
+                </h1>
+                <p className="text-sm text-gray-600 font-medium">
+                  Monitor and analyze your shortened links performance
+                </p>
+              </div>
             </div>
             <div className="flex items-center space-x-4">
-              <span className="text-gray-600 text-sm">
+              <span className="text-gray-600 text-sm font-medium">
                 Hello, {user?.email}
               </span>
               <button
                 onClick={handleLogout}
-                className="text-gray-600 hover:text-gray-800 transition-colors font-medium"
+                className="text-gray-600 hover:text-[#8039DF] transition-all duration-300 font-semibold"
               >
                 Logout
               </button>
@@ -435,60 +639,66 @@ const Dashboard = () => {
       </header>
 
       {/* Main Dashboard */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Dashboard Header */}
-        <div className="scroll-animate mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Your Links</h2>
-          <p className="text-gray-600">
-            Manage and track performance of your shortened URLs
-          </p>
-        </div>
-
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
         {/* Search and Sort Controls */}
-        <div
-          className="card scroll-animate mb-8"
-          style={{ animationDelay: "0.2s" }}
-        >
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-            {/* Search */}
-            <div className="flex-1 max-w-md">
-              <div className="relative">
-                <svg
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+        <div className="scroll-animate mb-8" style={{ animationDelay: "0.1s" }}>
+          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+              {/* Search */}
+              <div className="flex-1 max-w-md">
+                <div className="relative group">
+                  <svg
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-[#8039DF] transition-colors"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
+                  <input
+                    type="text"
+                    placeholder="Search links..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full pl-12 pr-4 py-3 bg-gray-50/80 border-2 border-gray-200/50 rounded-xl focus:outline-none focus:border-[#8039DF] focus:bg-white transition-all duration-300 text-gray-900 placeholder-gray-500"
                   />
-                </svg>
-                <input
-                  type="text"
-                  placeholder="Search links..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="input-field pl-10 text-sm"
-                />
+                </div>
               </div>
-            </div>
 
-            {/* Sort Control */}
-            <div className="flex items-center space-x-4">
-              <label className="text-sm font-medium text-gray-700">
-                Sort by:
-              </label>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="input-field text-sm py-2 min-w-[140px]"
-              >
-                <option value="dateCreated">Date Created</option>
-                <option value="totalClicks">Total Clicks</option>
-              </select>
+              {/* Sort Control */}
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2">
+                  <svg
+                    className="w-5 h-5 text-gray-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"
+                    />
+                  </svg>
+                  <label className="text-sm font-semibold text-gray-700">
+                    Sort by:
+                  </label>
+                </div>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="px-4 py-3 bg-gray-50/80 border-2 border-gray-200/50 rounded-xl focus:outline-none focus:border-[#8039DF] focus:bg-white transition-all duration-300 text-gray-900 font-medium min-w-[160px]"
+                >
+                  <option value="dateCreated">📅 Date Created</option>
+                  <option value="totalClicks">🔥 Total Clicks</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
@@ -536,20 +746,20 @@ const Dashboard = () => {
 
         {/* Links List */}
         {!loading && !error && (
-          <div className="space-y-4">
+          <div className="space-y-6">
             {sortedLinks.map((link, index) => (
               <div
                 key={link.id}
-                className="card scroll-animate hover:shadow-2xl transition-all duration-300 cursor-pointer group"
-                style={{ animationDelay: `${(index + 1) * 0.1}s` }}
+                className="group bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 hover:shadow-2xl hover:scale-[1.02] transition-all duration-500 cursor-pointer scroll-animate"
+                style={{ animationDelay: `${(index + 2) * 0.1}s` }}
                 onClick={() => setSelectedLink(link)}
               >
                 <div className="flex flex-col lg:flex-row lg:items-center gap-6">
                   {/* Link Info */}
                   <div className="flex-1">
-                    <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center space-x-3">
-                        <h3 className="text-lg font-bold text-[#8039DF] group-hover:text-[#667eea] transition-colors">
+                        <h3 className="text-xl font-bold text-[#8039DF] group-hover:text-[#667eea] transition-colors">
                           {link.shortUrl.replace("https://", "")}
                         </h3>
                         <button
@@ -557,11 +767,11 @@ const Dashboard = () => {
                             e.stopPropagation();
                             copyToClipboard(link.shortUrl);
                           }}
-                          className="text-gray-400 hover:text-[#8039DF] transition-colors p-1"
+                          className="text-gray-400 hover:text-[#8039DF] hover:bg-purple-50 transition-all duration-300 p-2 rounded-lg group/btn"
                           title="Copy link"
                         >
                           <svg
-                            className="w-4 h-4"
+                            className="w-5 h-5 group-hover/btn:scale-110 transition-transform"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -579,11 +789,11 @@ const Dashboard = () => {
                             e.stopPropagation();
                             openInNewTab(link.shortUrl);
                           }}
-                          className="text-gray-400 hover:text-[#8039DF] transition-colors p-1"
+                          className="text-gray-400 hover:text-[#8039DF] hover:bg-purple-50 transition-all duration-300 p-2 rounded-lg group/btn"
                           title="Open in new tab"
                         >
                           <svg
-                            className="w-4 h-4"
+                            className="w-5 h-5 group-hover/btn:scale-110 transition-transform"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -598,44 +808,52 @@ const Dashboard = () => {
                         </button>
                       </div>
                       <div className="text-right">
-                        <p className="text-2xl font-bold text-gray-900">
+                        <p className="text-3xl font-bold text-gray-900 mb-1">
                           {link.totalClicks.toLocaleString()}
                         </p>
-                        <p className="text-sm text-gray-500">Total Clicks</p>
+                        <p className="text-sm text-gray-500 font-medium">
+                          Total Clicks
+                        </p>
                       </div>
                     </div>
 
-                    <p className="text-gray-600 text-sm mb-3 truncate max-w-2xl">
+                    <p className="text-gray-600 text-sm mb-4 truncate max-w-3xl bg-gray-50/50 rounded-lg px-3 py-2">
                       {link.longUrl}
                     </p>
 
                     <div className="flex items-center justify-between">
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-gray-500 font-medium">
                         Created{" "}
-                        {new Date(link.dateCreated).toLocaleDateString()}
+                        {new Date(link.dateCreated).toLocaleDateString(
+                          "en-US",
+                          {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          }
+                        )}
                       </p>
 
                       {/* Performance Bar */}
                       <div className="flex items-center space-x-3">
-                        <span className="text-sm text-gray-600">
-                          Performance
+                        <span className="text-sm font-semibold text-gray-700">
+                          {link.performancePercent}% of target
                         </span>
-                        <div className="w-24 bg-gray-200 rounded-full h-2">
+                        <div className="w-32 bg-gray-200 rounded-full h-3 shadow-inner">
                           <div
-                            className="bg-gradient-to-r from-[#8039DF] to-[#667eea] h-2 rounded-full transition-all duration-500"
+                            className="bg-gradient-to-r from-[#8039DF] to-[#667eea] h-3 rounded-full transition-all duration-700 shadow-sm relative overflow-hidden"
                             style={{ width: `${link.performancePercent}%` }}
-                          ></div>
+                          >
+                            <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
+                          </div>
                         </div>
-                        <span className="text-sm font-medium text-gray-900">
-                          {link.performancePercent}%
-                        </span>
                       </div>
                     </div>
                   </div>
 
                   {/* Mini Chart Preview */}
-                  <div className="lg:w-32">
-                    <div className="flex items-end justify-between h-12 space-x-1">
+                  <div className="lg:w-40 lg:border-l lg:border-gray-200/50 lg:pl-6">
+                    <div className="flex items-end justify-between h-16 space-x-1 mb-3">
                       {link.monthlyClicks.slice(-6).map((month, idx) => {
                         const maxClicks = Math.max(
                           ...link.monthlyClicks.map((m) => m.clicks)
@@ -645,14 +863,16 @@ const Dashboard = () => {
                         return (
                           <div
                             key={idx}
-                            className="flex-1 bg-gradient-to-t from-[#8039DF] to-[#667eea] rounded-t transition-all duration-300 group-hover:shadow-md min-h-[2px]"
-                            style={{ height: `${Math.max(height, 10)}%` }}
-                          ></div>
+                            className="flex-1 bg-gradient-to-t from-[#8039DF] to-[#667eea] rounded-t-lg transition-all duration-500 group-hover:shadow-lg group-hover:scale-y-110 min-h-[4px] relative overflow-hidden"
+                            style={{ height: `${Math.max(height, 15)}%` }}
+                          >
+                            <div className="absolute inset-0 bg-white/20 group-hover:animate-pulse"></div>
+                          </div>
                         );
                       })}
                     </div>
-                    <p className="text-xs text-gray-500 text-center mt-2">
-                      Last 6 months
+                    <p className="text-xs text-gray-500 text-center font-medium">
+                      Last 6 months trend
                     </p>
                   </div>
                 </div>
