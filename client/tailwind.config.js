@@ -41,6 +41,14 @@ export default {
           "linear-gradient(135deg, #667eea 0%, #764ba2 50%, #8b5cf6 100%)",
         "gradient-sunset": "linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)",
         "gradient-ocean": "linear-gradient(135deg, #2196f3 0%, #21cbf3 100%)",
+        "gradient-radial":
+          "radial-gradient(ellipse at center, var(--tw-gradient-stops))",
+      },
+      boxShadow: {
+        "3xl": "0 35px 60px -12px rgba(0, 0, 0, 0.25)",
+        glow: "0 0 30px rgba(128, 57, 223, 0.5)",
+        "glow-blue": "0 0 30px rgba(59, 130, 246, 0.5)",
+        "glow-pink": "0 0 30px rgba(236, 72, 153, 0.5)",
       },
       animation: {
         float: "float 3s ease-in-out infinite",
