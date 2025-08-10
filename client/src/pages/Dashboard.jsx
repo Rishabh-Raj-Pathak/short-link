@@ -152,10 +152,22 @@ const Dashboard = () => {
     }, observerOptions);
 
     const animatedElements = document.querySelectorAll(".scroll-animate");
-    animatedElements.forEach((el) => observer.observe(el));
+    animatedElements.forEach((el) => {
+      // Check if element is already in viewport when page loads
+      const rect = el.getBoundingClientRect();
+      const isInViewport = rect.top >= 0 && rect.top <= window.innerHeight;
+
+      if (isInViewport) {
+        // Add class immediately for elements already visible
+        el.classList.add("in-view");
+      }
+
+      // Still observe for future scroll events
+      observer.observe(el);
+    });
 
     return () => observer.disconnect();
-  }, [selectedLink]);
+  }, [selectedLink, links]);
 
   const handleLogout = async () => {
     const result = await logout();
