@@ -100,8 +100,8 @@ const Dashboard = () => {
     from: "2024-01",
     to: "2024-12",
   });
-  const [links, setLinks] = useState(DUMMY_LINKS);
-  const [loading, setLoading] = useState(false);
+  const [links, setLinks] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   // Fetch links from backend
@@ -110,11 +110,12 @@ const Dashboard = () => {
       setLoading(true);
       setError("");
       const response = await linksApi.getLinks({
-        sort: sortBy === "totalClicks" ? "totalClicks" : "createdAt",
+        sortBy: sortBy === "totalClicks" ? "totalClicks" : "createdAt",
         search: searchTerm,
       });
       setLinks(response.links || []);
     } catch (err) {
+      console.error("Failed to fetch links:", err);
       setError(err.message || "Failed to load links");
       setLinks([]);
     } finally {
@@ -595,48 +596,6 @@ const Dashboard = () => {
         <div className="absolute top-40 right-20 w-24 h-24 bg-blue-200/20 rounded-full animate-float-slow"></div>
         <div className="absolute bottom-32 left-1/4 w-40 h-40 bg-pink-200/20 rounded-full animate-blob"></div>
       </div>
-
-      {/* Header */}
-      <header className="relative z-20 bg-white/80 backdrop-blur-md border-b border-gray-200/50 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-primary rounded-xl flex items-center justify-center shadow-lg">
-                <svg
-                  className="w-6 h-6 text-white"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-[#8039DF] to-[#667eea] bg-clip-text text-transparent">
-                  URL Analytics Dashboard
-                </h1>
-                <p className="text-sm text-gray-600 font-medium">
-                  Monitor and analyze your shortened links performance
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-gray-600 text-sm font-medium">
-                Hello, {user?.email}
-              </span>
-              <button
-                onClick={handleLogout}
-                className="text-gray-600 hover:text-[#8039DF] transition-all duration-300 font-semibold"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
 
       {/* Main Dashboard */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">

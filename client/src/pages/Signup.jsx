@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const Signup = () => {
@@ -13,13 +13,18 @@ const Signup = () => {
 
   const { signup, error, clearError, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const returnTo = searchParams.get("returnTo");
 
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/dashboard");
+      // If there's a returnTo parameter, go there, otherwise go to dashboard
+      const destination =
+        returnTo && returnTo !== "/signup" ? returnTo : "/dashboard";
+      navigate(destination, { replace: true });
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, returnTo]);
 
   // Clear errors when component mounts or form changes
   useEffect(() => {
@@ -74,8 +79,10 @@ const Signup = () => {
       const result = await signup(formData.email, formData.password);
 
       if (result.success) {
-        // Redirect will happen automatically via useEffect
-        console.log("Signup successful");
+        // Navigate to returnTo destination or dashboard
+        const destination =
+          returnTo && returnTo !== "/signup" ? returnTo : "/dashboard";
+        navigate(destination, { replace: true });
       } else {
         setLocalError(result.error);
       }

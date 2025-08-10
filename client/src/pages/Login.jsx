@@ -1,34 +1,39 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [localError, setLocalError] = useState('');
+  const [localError, setLocalError] = useState("");
 
   const { login, error, clearError, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const returnTo = searchParams.get("returnTo");
 
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/dashboard');
+      // If there's a returnTo parameter, go there, otherwise go to dashboard
+      const destination =
+        returnTo && returnTo !== "/login" ? returnTo : "/dashboard";
+      navigate(destination, { replace: true });
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, returnTo]);
 
   // Clear errors when component mounts or form changes
   useEffect(() => {
     clearError();
-    setLocalError('');
+    setLocalError("");
   }, [clearError, formData]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
@@ -36,32 +41,34 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Basic validation
     if (!formData.email || !formData.password) {
-      setLocalError('Please fill in all fields');
+      setLocalError("Please fill in all fields");
       return;
     }
 
-    if (!formData.email.includes('@')) {
-      setLocalError('Please enter a valid email address');
+    if (!formData.email.includes("@")) {
+      setLocalError("Please enter a valid email address");
       return;
     }
 
     setIsLoading(true);
-    setLocalError('');
+    setLocalError("");
 
     try {
       const result = await login(formData.email, formData.password);
-      
+
       if (result.success) {
-        // Redirect will happen automatically via useEffect
-        console.log('Login successful');
+        // Navigate to returnTo destination or dashboard
+        const destination =
+          returnTo && returnTo !== "/login" ? returnTo : "/dashboard";
+        navigate(destination, { replace: true });
       } else {
         setLocalError(result.error);
       }
     } catch (err) {
-      setLocalError('An unexpected error occurred');
+      setLocalError("An unexpected error occurred");
     } finally {
       setIsLoading(false);
     }
@@ -73,9 +80,7 @@ const Login = () => {
     <div className="min-h-screen bg-white flex items-center justify-center px-4">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <h2 className="text-3xl font-bold text-gray-900">
-            Welcome Back
-          </h2>
+          <h2 className="text-3xl font-bold text-gray-900">Welcome Back</h2>
           <p className="mt-2 text-gray-600">
             Sign in to your account to manage your short links
           </p>
@@ -84,7 +89,10 @@ const Login = () => {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-900 mb-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-900 mb-2"
+              >
                 Email Address
               </label>
               <input
@@ -102,7 +110,10 @@ const Login = () => {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-900 mb-2">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-900 mb-2"
+              >
                 Password
               </label>
               <input
@@ -132,7 +143,7 @@ const Login = () => {
               className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={isLoading}
             >
-              {isLoading ? 'Signing In...' : 'Sign In'}
+              {isLoading ? "Signing In..." : "Sign In"}
             </button>
           </div>
 

@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useToast } from "../context/ToastContext";
 import { linksApi } from "../utils/api";
 
 const Home = () => {
   const { isAuthenticated, user } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { error: showErrorToast, success } = useToast();
   const [urlInput, setUrlInput] = useState("");
   const [shortenedUrl, setShortenedUrl] = useState("");
   const [qrCodeUrl, setQrCodeUrl] = useState("");
@@ -35,6 +39,15 @@ const Home = () => {
 
   const handleShortenUrl = async (e) => {
     e.preventDefault();
+
+    // Check authentication first - redirect if not logged in
+    if (!isAuthenticated) {
+      showErrorToast("Please log in to shorten links");
+      const returnTo = location.pathname + location.search + location.hash;
+      navigate(`/login?returnTo=${encodeURIComponent(returnTo)}`);
+      return;
+    }
+
     if (!urlInput.trim()) {
       setError("Please enter a URL");
       return;
@@ -60,6 +73,7 @@ const Home = () => {
       // Clear input after successful shortening
       setUrlInput("");
     } catch (err) {
+      // Global 401 handler will take care of session expiry
       setError(err.message || "Failed to shorten URL");
     } finally {
       setIsLoading(false);
@@ -124,60 +138,6 @@ const Home = () => {
         <div className="absolute bottom-40 left-40 w-1.5 h-1.5 bg-blue-400 rounded-full animate-twinkle animation-delay-2000"></div>
         <div className="absolute bottom-20 right-20 w-1 h-1 bg-purple-400 rounded-full animate-twinkle animation-delay-3000"></div>
       </div>
-
-      {/* Header */}
-      <header className="relative z-50 bg-white/80 backdrop-blur-lg border-b border-white/20 shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <svg
-                  className="w-5 h-5 text-white"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
-              <h1 className="text-xl font-bold text-gray-900">ShortLink</h1>
-            </div>
-            <div className="flex items-center space-x-4">
-              {isAuthenticated ? (
-                <>
-                  <span className="text-gray-600 text-sm">
-                    Hello, {user?.email}
-                  </span>
-                  <Link
-                    to="/dashboard"
-                    className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg font-medium transition-colors"
-                  >
-                    Dashboard
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <Link
-                    to="/login"
-                    className="text-gray-600 hover:text-gray-800 transition-colors font-medium"
-                  >
-                    Login
-                  </Link>
-                  <Link
-                    to="/signup"
-                    className="bg-[#8039DF] hover:bg-[#6B2FC7] text-white px-4 py-2 rounded-lg font-medium transition-colors"
-                  >
-                    Sign Up
-                  </Link>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-      </header>
 
       {/* HERO SECTION */}
       {/* Hero Section - Restyled like CTA */}
@@ -297,7 +257,9 @@ const Home = () => {
                     </div>
                     <button
                       type="submit"
-                      disabled={isLoading || !urlInput.trim()}
+                      disabled={
+                        isLoading || !urlInput.trim() || !isAuthenticated
+                      }
                       className="relative w-full bg-gradient-to-r from-[#8039DF] via-purple-600 to-blue-600 hover:from-[#6B2FC7] hover:via-purple-700 hover:to-blue-700 text-white py-4 px-6 rounded-2xl font-bold text-lg transition-all duration-300 transform hover:scale-[1.03] hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none group/btn overflow-hidden shadow-lg border-2 border-white/30"
                     >
                       {/* Button Background Enhancement */}
@@ -329,6 +291,8 @@ const Home = () => {
                             </svg>
                             Shortening...
                           </span>
+                        ) : !isAuthenticated ? (
+                          "Please Log In to Shorten URLs"
                         ) : (
                           "Shorten URL →"
                         )}

@@ -21,9 +21,10 @@ const ProtectedRoute = ({ children }) => {
     );
   }
 
-  // If not authenticated, redirect to login with the current location
+  // If not authenticated, redirect to login with returnTo parameter
   if (!isAuthenticated) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    const returnTo = location.pathname + location.search + location.hash;
+    return <Navigate to={`/login?returnTo=${encodeURIComponent(returnTo)}`} replace />;
   }
 
   // If authenticated, render the protected component

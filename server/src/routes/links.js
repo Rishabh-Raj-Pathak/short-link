@@ -1,4 +1,5 @@
 import express from "express";
+import mongoose from "mongoose";
 import { Link } from "../models/index.js";
 import { validateUrl } from "../utils/validations.js";
 import { generateUniqueShortCode } from "../utils/shortCode.js";
@@ -7,8 +8,8 @@ import { BASE_URL } from "../config/env.js";
 
 const router = express.Router();
 
-// POST /api/shorten - Create shortened URL
-router.post("/shorten", optionalAuth, async (req, res) => {
+// POST /api/shorten - Create shortened URL (Auth Required)
+router.post("/shorten", requireAuth, async (req, res) => {
   try {
     const { longUrl } = req.body;
 
@@ -20,32 +21,30 @@ router.post("/shorten", optionalAuth, async (req, res) => {
 
     const validatedUrl = urlValidation.url;
 
-    // If user is logged in, check for existing link (dedupe policy)
-    if (req.userId) {
-      const existingLink = await Link.findOne({
-        ownerId: req.userId,
-        longUrl: validatedUrl,
-      });
+    // Check for existing link (dedupe policy) - user is guaranteed to be authenticated
+    const existingLink = await Link.findOne({
+      ownerId: req.userId,
+      longUrl: validatedUrl,
+    });
 
-      if (existingLink) {
-        return res.json({
-          shortUrl: `${BASE_URL}/${existingLink.shortCode}`,
-          shortCode: existingLink.shortCode,
-          longUrl: existingLink.longUrl,
-          totalClicks: existingLink.totalClicks,
-          createdAt: existingLink.createdAt,
-          linkId: existingLink._id,
-          isExisting: true,
-        });
-      }
+    if (existingLink) {
+      return res.json({
+        shortUrl: `${BASE_URL}/${existingLink.shortCode}`,
+        shortCode: existingLink.shortCode,
+        longUrl: existingLink.longUrl,
+        totalClicks: existingLink.totalClicks,
+        createdAt: existingLink.createdAt,
+        linkId: existingLink._id,
+        isExisting: true,
+      });
     }
 
     // Generate unique short code
     const shortCode = await generateUniqueShortCode();
 
-    // Create new link
+    // Create new link - user is guaranteed to be authenticated
     const link = new Link({
-      ownerId: req.userId || null, // null for anonymous users
+      ownerId: req.userId,
       shortCode,
       longUrl: validatedUrl,
     });
@@ -90,8 +89,12 @@ router.get("/links", requireAuth, async (req, res) => {
     const sortField = validSortFields.includes(sortBy) ? sortBy : "createdAt";
     const sortDirection = sortOrder === "asc" ? 1 : -1;
 
-    // Build query
-    const query = { ownerId: req.userId };
+    // Build query - ensure ownerId is properly converted to ObjectId
+    const query = {
+      ownerId: mongoose.Types.ObjectId.isValid(req.userId)
+        ? new mongoose.Types.ObjectId(req.userId)
+        : req.userId,
+    };
 
     // Add search filter if provided
     if (search.trim()) {
@@ -111,9 +114,46 @@ router.get("/links", requireAuth, async (req, res) => {
     // Add shortUrl to each link and format data for frontend
     const linksWithShortUrl = links.map((link) => {
       // Convert clicksByMonth Map to array for analytics
-      const monthlyClicks = Array.from(link.clicksByMonth?.entries() || [])
-        .map(([month, clicks]) => ({ month, clicks }))
-        .sort((a, b) => a.month.localeCompare(b.month));
+      let monthlyClicks = [];
+
+      try {
+        // Handle the clicksByMonth field carefully
+        if (link.clicksByMonth && typeof link.clicksByMonth === "object") {
+          if (link.clicksByMonth instanceof Map) {
+            monthlyClicks = Array.from(link.clicksByMonth.entries())
+              .map(([month, clicks]) => ({ month, clicks }))
+              .sort((a, b) => a.month.localeCompare(b.month));
+          } else if (typeof link.clicksByMonth === "object") {
+            // Handle plain object (when using .lean())
+            monthlyClicks = Object.entries(link.clicksByMonth)
+              .map(([month, clicks]) => ({ month, clicks }))
+              .sort((a, b) => a.month.localeCompare(b.month));
+          }
+        }
+      } catch (mapError) {
+        monthlyClicks = [];
+      }
+
+      // If no monthly clicks data exists, generate some dummy data for charts
+      if (monthlyClicks.length === 0) {
+        const currentDate = new Date();
+        const months = [];
+
+        // Generate last 6 months of data
+        for (let i = 5; i >= 0; i--) {
+          const date = new Date(
+            currentDate.getFullYear(),
+            currentDate.getMonth() - i,
+            1
+          );
+          const monthKey = `${date.getFullYear()}-${String(
+            date.getMonth() + 1
+          ).padStart(2, "0")}`;
+          months.push({ month: monthKey, clicks: 0 });
+        }
+
+        monthlyClicks = months;
+      }
 
       // Calculate performance percentage (simple metric based on total clicks)
       const maxClicks = Math.max(...links.map((l) => l.totalClicks), 1);
@@ -121,17 +161,19 @@ router.get("/links", requireAuth, async (req, res) => {
         (link.totalClicks / maxClicks) * 100
       );
 
-      return {
+      const result = {
         id: link._id,
         shortUrl: `${BASE_URL}/${link.shortCode}`,
         shortCode: link.shortCode,
         longUrl: link.longUrl,
         dateCreated: link.createdAt.toISOString().split("T")[0],
-        totalClicks: link.totalClicks,
+        totalClicks: link.totalClicks || 0,
         performancePercent,
         monthlyClicks,
         createdAt: link.createdAt,
       };
+
+      return result;
     });
 
     res.json({
@@ -151,10 +193,12 @@ router.get("/links", requireAuth, async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Get links error:", error);
+    console.error("❌ Get links error:", error.message);
+    console.error("❌ Error details:", error);
     res.status(500).json({
       error: "Failed to retrieve links",
       code: "GET_LINKS_FAILED",
+      details: error.message,
     });
   }
 });
@@ -177,9 +221,30 @@ router.get("/links/:id", requireAuth, async (req, res) => {
     }
 
     // Convert clicksByMonth Map to array for analytics
-    const monthlyClicks = Array.from(link.clicksByMonth?.entries() || [])
+    let monthlyClicks = Array.from(link.clicksByMonth?.entries() || [])
       .map(([month, clicks]) => ({ month, clicks }))
       .sort((a, b) => a.month.localeCompare(b.month));
+
+    // If no monthly clicks data exists, generate some dummy data for charts
+    if (monthlyClicks.length === 0) {
+      const currentDate = new Date();
+      const months = [];
+
+      // Generate last 6 months of data
+      for (let i = 5; i >= 0; i--) {
+        const date = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth() - i,
+          1
+        );
+        const monthKey = `${date.getFullYear()}-${String(
+          date.getMonth() + 1
+        ).padStart(2, "0")}`;
+        months.push({ month: monthKey, clicks: 0 });
+      }
+
+      monthlyClicks = months;
+    }
 
     res.json({
       id: link._id,
