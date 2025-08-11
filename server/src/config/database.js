@@ -20,8 +20,10 @@ const connectDB = async () => {
       // Retrying connection in 5 seconds
       setTimeout(connectDB, 5000);
     } else {
-      // In production, exit the process
-      process.exit(1);
+      // In production, log error and retry instead of exiting
+      console.error('MongoDB connection failed:', error.message);
+      console.log('Retrying connection in 10 seconds...');
+      setTimeout(connectDB, 10000);
     }
   }
 };
