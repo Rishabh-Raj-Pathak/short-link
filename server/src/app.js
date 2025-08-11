@@ -63,6 +63,22 @@ app.get("/health", async (req, res) => {
   }
 });
 
+// Root route - API info
+app.get("/", (req, res) => {
+  res.json({
+    name: "URL Shortener API",
+    version: "1.0.0",
+    status: "running",
+    endpoints: {
+      health: "/health",
+      auth: "/auth/*",
+      api: "/api/*",
+      redirect: "/:shortCode",
+    },
+    docs: "Visit the frontend at your deployed Vercel URL",
+  });
+});
+
 // Routes
 app.use("/auth", authRoutes);
 app.use("/api", linkRoutes);
