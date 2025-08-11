@@ -450,7 +450,7 @@ const Home = () => {
                 <span className="text-2xl font-bold text-white">4.0</span>
               </div>
 
-              <p className="text-white/80">from 500+ reviews</p>
+              <p className="text-white/80">from 500+ reviews (DEMO DATA)</p>
             </div>
           </div>
         </div>
