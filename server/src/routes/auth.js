@@ -56,7 +56,7 @@ router.post("/signup", async (req, res) => {
       token, // Also return token for API clients
     });
   } catch (error) {
-    console.error("Signup error:", error);
+    // Signup error occurred
 
     if (error.code === 11000) {
       // MongoDB duplicate key error
@@ -119,7 +119,7 @@ router.post("/login", async (req, res) => {
       token, // Also return token for API clients
     });
   } catch (error) {
-    console.error("Login error:", error);
+    // Login error occurred
     res.status(500).json({
       error: "Login failed. Please try again.",
       code: "LOGIN_FAILED",
@@ -136,7 +136,7 @@ router.post("/logout", (req, res) => {
       message: "Logout successful",
     });
   } catch (error) {
-    console.error("Logout error:", error);
+    // Logout error occurred
     res.status(500).json({
       error: "Logout failed",
       code: "LOGOUT_FAILED",
@@ -151,7 +151,7 @@ router.get("/me", requireAuth, (req, res) => {
       user: req.user.toJSON(),
     });
   } catch (error) {
-    console.error("Get profile error:", error);
+    // Get profile error occurred
     res.status(500).json({
       error: "Failed to get user profile",
       code: "PROFILE_FAILED",

@@ -63,7 +63,7 @@ router.post("/shorten", optionalAuth, async (req, res) => {
       isExisting: false,
     });
   } catch (error) {
-    console.error("Shorten URL error:", error);
+    // Shorten URL error occurred
     res.status(500).json({
       error: "Failed to shorten URL. Please try again.",
       code: "SHORTEN_FAILED",
@@ -195,8 +195,7 @@ router.get("/links", requireAuth, async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("❌ Get links error:", error.message);
-    console.error("❌ Error details:", error);
+    // Get links error occurred
     res.status(500).json({
       error: "Failed to retrieve links",
       code: "GET_LINKS_FAILED",
@@ -259,7 +258,7 @@ router.get("/links/:id", requireAuth, async (req, res) => {
       createdAt: link.createdAt,
     });
   } catch (error) {
-    console.error("Get link error:", error);
+    // Get link error occurred
 
     if (error.name === "CastError") {
       return res.status(400).json({
@@ -330,7 +329,7 @@ router.get("/links/:id/analytics", requireAuth, async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Get analytics error:", error);
+    // Get analytics error occurred
 
     if (error.name === "CastError") {
       return res.status(400).json({
@@ -372,7 +371,7 @@ router.delete("/links/:id", requireAuth, async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Delete link error:", error);
+    // Delete link error occurred
 
     if (error.name === "CastError") {
       return res.status(400).json({

@@ -22,11 +22,7 @@ export const generateUniqueShortCode = async (maxRetries = 5) => {
       return shortCode;
     }
 
-    console.log(
-      `Short code collision detected: ${shortCode}, retrying... (${
-        attempt + 1
-      }/${maxRetries})`
-    );
+    // Short code collision detected, retrying silently
   }
 
   throw new Error(

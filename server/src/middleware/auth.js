@@ -31,7 +31,7 @@ export const requireAuth = async (req, res, next) => {
 
     next();
   } catch (error) {
-    console.error("Auth middleware error:", error.message);
+    // Auth middleware error occurred
 
     return res.status(401).json({
       ok: false,
@@ -56,7 +56,7 @@ export const optionalAuth = async (req, res, next) => {
     }
   } catch (error) {
     // Silently fail for optional auth
-    console.log("Optional auth failed:", error.message);
+    // Optional auth failed
   }
 
   next();

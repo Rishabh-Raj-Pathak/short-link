@@ -11,16 +11,13 @@ const connectDB = async () => {
       family: 4, // Use IPv4, skip trying IPv6
     });
 
-    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
-
-    // Log database name
-    console.log(`📊 Database: ${conn.connection.name}`);
+    // MongoDB connected successfully
   } catch (error) {
-    console.error("❌ MongoDB connection error:", error.message);
+    // MongoDB connection error occurred
 
     // In development, retry after 5 seconds
     if (NODE_ENV === "development") {
-      console.log("🔄 Retrying connection in 5 seconds...");
+      // Retrying connection in 5 seconds
       setTimeout(connectDB, 5000);
     } else {
       // In production, exit the process
@@ -31,11 +28,11 @@ const connectDB = async () => {
 
 // Handle connection events
 mongoose.connection.on("disconnected", () => {
-  console.log("⚠️  MongoDB disconnected");
+  // MongoDB disconnected
 });
 
 mongoose.connection.on("error", (err) => {
-  console.error("❌ MongoDB error:", err);
+  // MongoDB error occurred
 });
 
 // Function to disconnect from database (useful for testing)
@@ -43,10 +40,10 @@ const disconnectDB = async () => {
   try {
     await mongoose.connection.close();
     if (NODE_ENV !== "test") {
-      console.log("✅ MongoDB disconnected");
+      // MongoDB disconnected
     }
   } catch (error) {
-    console.error("❌ MongoDB disconnect error:", error.message);
+    // MongoDB disconnect error occurred
   }
 };
 

@@ -115,7 +115,7 @@ const Dashboard = () => {
       });
       setLinks(response.links || []);
     } catch (err) {
-      console.error("Failed to fetch links:", err);
+      // Failed to fetch links
       setError(err.message || "Failed to load links");
       setLinks([]);
     } finally {
@@ -172,7 +172,7 @@ const Dashboard = () => {
   const handleLogout = async () => {
     const result = await logout();
     if (result.success) {
-      console.log("Logout successful");
+      // Logout successful
     }
   };
 
@@ -189,7 +189,7 @@ const Dashboard = () => {
         button.classList.remove("bg-green-500");
       }, 2000);
     } catch (err) {
-      console.error("Failed to copy:", err);
+      // Failed to copy
     }
   };
 
@@ -461,12 +461,12 @@ const Dashboard = () => {
                     icon: "🏆",
                     color: "from-yellow-500 to-orange-500",
                   },
-                  {
-                    label: "Growth Rate",
-                    value: `+${Math.abs(stats.growth)}%`,
-                    icon: "🚀",
-                    color: "from-emerald-500 to-green-600",
-                  },
+                  // {
+                  //   label: "Growth Rate",
+                  //   value: `+${Math.abs(stats.growth)}%`,
+                  //   icon: "🚀",
+                  //   color: "from-emerald-500 to-green-600",
+                  // },
                   {
                     label: "Monthly View",
                     value: "Monthly",

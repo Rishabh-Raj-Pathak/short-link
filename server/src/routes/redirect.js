@@ -30,16 +30,16 @@ router.get("/:shortCode", async (req, res) => {
     // Increment analytics atomically
     try {
       await link.incrementClicks();
-      console.log(`📊 Click recorded for ${shortCode} -> ${link.longUrl}`);
+      // Click recorded successfully
     } catch (analyticsError) {
       // Don't fail the redirect if analytics update fails
-      console.error("Analytics update failed:", analyticsError);
+      // Analytics update failed silently
     }
 
     // Perform redirect (HTTP 302)
     res.redirect(302, link.longUrl);
   } catch (error) {
-    console.error("Redirect error:", error);
+    // Redirect error occurred
 
     // Return JSON error for API consistency
     res.status(500).json({

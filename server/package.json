@@ -5,8 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
-    "test": "jest --testTimeout=10000 --experimental-vm-modules"
+    "dev": "nodemon src/index.js"
   },
   "keywords": [],
   "author": "",
@@ -23,20 +22,6 @@
     "nanoid": "^5.1.5"
   },
   "devDependencies": {
-    "jest": "^30.0.5",
-    "nodemon": "^3.1.10",
-    "supertest": "^7.1.4"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "extensionsToTreatAsEsm": [
-      ".js"
-    ],
-    "globals": {
-      "jest": {
-        "useESM": true
-      }
-    },
-    "transform": {}
+    "nodemon": "^3.1.10"
   }
 }
