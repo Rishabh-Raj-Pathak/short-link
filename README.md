@@ -78,12 +78,6 @@ A modern, full-stack URL shortening platform built with the MERN stack. Transfor
 - **URL Generation**: nanoid for generating unique short codes
 - **Environment Management**: dotenv for configuration
 
-### Database Schema
-
-- **Users Collection**: Email, hashed passwords, creation timestamps
-- **Links Collection**: Owner references, short codes, original URLs, click analytics
-- **Analytics Tracking**: Total clicks and monthly breakdown with Map data structure
-
 ## 🚀 Architecture Highlights
 
 ### Security First
