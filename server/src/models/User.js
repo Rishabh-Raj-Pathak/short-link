@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema(
 );
 
 // Index for faster email lookups
-userSchema.index({ email: 1 });
+// userSchema.index({ email: 1 });
 
 // Static method to hash password
 userSchema.statics.hashPassword = async function (password) {

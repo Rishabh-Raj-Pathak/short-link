@@ -49,7 +49,7 @@ const linkSchema = new mongoose.Schema(
 
 // Compound indexes for efficient queries
 linkSchema.index({ ownerId: 1, createdAt: -1 }); // Dashboard listing
-linkSchema.index({ shortCode: 1 }); // Fast redirect lookups
+// linkSchema.index({ shortCode: 1 }); // Fast redirect lookups
 linkSchema.index({ ownerId: 1, longUrl: 1 }); // Dedupe checks
 
 // Static method to generate month key for analytics
