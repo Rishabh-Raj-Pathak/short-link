@@ -107,6 +107,70 @@ A modern, full-stack URL shortening platform built with the MERN stack. Transfor
 - Environment-based configuration
 - Database indexes for optimal query performance
 
+## 🧪 Comprehensive Testing Strategy
+
+### ✅ Functional Test Cases
+
+Our application has been designed with comprehensive testing in mind, covering all critical user flows and business logic:
+
+#### **Authentication & User Management**
+
+- ✅ **New User Registration**: Successful account creation with email validation
+- ✅ **User Login**: Existing user authentication with credential verification
+- ✅ **Invalid Credentials**: Proper rejection and error handling for wrong passwords
+- ✅ **Session Management**: JWT token validation and secure logout functionality
+
+#### **URL Shortening Core Features**
+
+- ✅ **Valid URL Processing**: Successful shortening of http/https URLs
+- ✅ **QR Code Generation**: Automatic QR code creation for every shortened link
+- ✅ **Instant Response**: Real-time short URL and QR code delivery
+- ✅ **Link Deduplication**: Smart detection - same user + same URL returns existing short link
+
+#### **Redirect & Analytics**
+
+- ✅ **Redirect Functionality**: Seamless redirection from short URL to original destination
+- ✅ **Click Tracking**: Accurate increment of total click counts
+- ✅ **Monthly Analytics**: Precise month-by-month click tracking
+- ✅ **Real-time Updates**: Instant analytics updates on each click
+
+### 🛡️ Edge Cases & Security Testing
+
+#### **Input Validation & Security**
+
+- 🔒 **Invalid URL Schemes**: Rejection of URLs without proper scheme (`example.com`)
+- 🔒 **Unsupported Protocols**: Blocking dangerous protocols (`ftp://`, `javascript:`, `data:`)
+- 🔒 **Redirect Loop Prevention**: Intelligent detection and blocking of URLs starting with `BASE_URL`
+- 🔒 **XSS Prevention**: Comprehensive input sanitization and validation
+
+#### **Authorization & Data Protection**
+
+- 🔐 **User Isolation**: Users cannot view or modify other users' links
+- 🔐 **Authentication Required**: Protected routes properly enforce login requirements
+- 🔐 **Data Ownership**: Strict enforcement of link ownership for analytics access
+
+#### **System Reliability**
+
+- ⚡ **Short Code Collisions**: Unique database index with automatic retry on rare collisions
+- ⚡ **Concurrent Clicks**: Atomic database operations ensure accurate click counting
+- ⚡ **Malformed Input**: Graceful error handling without server crashes
+- ⚡ **Database Consistency**: Proper error handling and transaction management
+
+#### **Analytics Accuracy**
+
+- 📊 **Timezone Consistency**: Month bucketing aligned with server timezone
+- 📊 **Data Integrity**: Accurate monthly analytics with proper date handling
+- 📊 **Performance Metrics**: Reliable calculation of growth rates and trends
+
+### 🔍 Quality Assurance Highlights
+
+- **Comprehensive Validation**: Every input is validated both client-side and server-side
+- **Security-First Approach**: Multiple layers of security testing and validation
+- **Error Handling**: Graceful degradation and meaningful error messages
+- **Performance Testing**: Optimized database queries and efficient data structures
+- **Cross-Browser Compatibility**: Tested across different browsers and devices
+- **Responsive Design**: Thorough testing on various screen sizes and orientations
+
 ## 📱 User Journey
 
 ### Public Access
@@ -150,22 +214,6 @@ A modern, full-stack URL shortening platform built with the MERN stack. Transfor
 
 - `GET /:shortCode` - Redirect to original URL with analytics tracking
 
-## 🎨 Design Philosophy
-
-### Modern Aesthetics
-
-- **Gradient-based Design**: Beautiful purple-to-blue color schemes
-- **Glassmorphism Effects**: Frosted glass backgrounds with backdrop blur
-- **Smooth Animations**: CSS transitions and keyframe animations
-- **Interactive Feedback**: Hover states and loading indicators
-
-### User-Centric Approach
-
-- **Intuitive Navigation**: Clear information hierarchy
-- **Responsive Layout**: Mobile-first design principles
-- **Accessibility**: Semantic HTML and proper contrast ratios
-- **Performance**: Optimized images and efficient rendering
-
 ## 🔒 Security Features
 
 - **JWT Security**: Secure token-based authentication
@@ -189,15 +237,6 @@ A modern, full-stack URL shortening platform built with the MERN stack. Transfor
 - Performance trend indicators
 - Monthly comparison views
 - Custom date range analysis
-
-## 🌟 Unique Features
-
-1. **Smart Deduplication**: Returns existing short links for authenticated users
-2. **Anonymous Support**: Works without registration for basic functionality
-3. **Instant QR Codes**: Automatic generation with download options
-4. **Beautiful UI**: Modern design with smooth animations
-5. **Comprehensive Analytics**: Deep insights into link performance
-6. **Mobile Optimized**: Perfect experience across all devices
 
 ## 🎯 Use Cases
 
