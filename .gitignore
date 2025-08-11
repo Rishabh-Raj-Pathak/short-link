@@ -27,6 +27,7 @@ server/build/
 .env.staging
 server/.env*
 client/.env*
+Deploy.md
 
 # Cursor rules (IMPORTANT: Keep these private)
 .cursor/

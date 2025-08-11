@@ -19,7 +19,11 @@ app.use(express.static("public"));
 // CORS configuration
 app.use(
   cors({
-    origin: CLIENT_URL,
+    origin: [
+      process.env.CLIENT_URL,
+      "https://short-link-mocha-five.vercel.app",
+      "https://*.vercel.app",
+    ],
     credentials: true,
   })
 );
