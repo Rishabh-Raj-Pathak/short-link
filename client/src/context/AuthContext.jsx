@@ -1,12 +1,12 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { authApi } from '../utils/api.js';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { authApi } from "../utils/api.js";
 
 const AuthContext = createContext(null);
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
@@ -29,6 +29,7 @@ export const AuthProvider = ({ children }) => {
       setUser(response.user);
     } catch (error) {
       // If /auth/me fails, user is not logged in - this is expected
+      // Don't trigger global error handling for initial auth check
       setUser(null);
     } finally {
       setLoading(false);
@@ -89,9 +90,5 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated: !!user,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

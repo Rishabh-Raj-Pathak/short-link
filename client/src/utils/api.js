@@ -24,12 +24,15 @@ const defaultOptions = {
 async function apiRequest(endpoint, options = {}) {
   const url = `${config.apiBaseUrl}${endpoint}`;
 
+  // Extract skipGlobalHandler from options to avoid passing it to fetch
+  const { skipGlobalHandler, ...fetchOptions } = options;
+
   const requestOptions = {
     ...defaultOptions,
-    ...options,
+    ...fetchOptions,
     headers: {
       ...defaultOptions.headers,
-      ...options.headers,
+      ...fetchOptions.headers,
     },
   };
 
@@ -54,8 +57,8 @@ async function apiRequest(endpoint, options = {}) {
         data.error ||
         `HTTP ${response.status}: ${response.statusText}`;
 
-      // Handle 401 responses globally
-      if (response.status === 401 && handle401Redirect) {
+      // Handle 401 responses globally, but skip if explicitly requested
+      if (response.status === 401 && handle401Redirect && !skipGlobalHandler) {
         handle401Redirect();
       }
 
@@ -104,7 +107,7 @@ export const authApi = {
    * Get current user info
    */
   me: async () => {
-    return apiRequest("/auth/me");
+    return apiRequest("/auth/me", { skipGlobalHandler: true });
   },
 };
 

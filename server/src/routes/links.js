@@ -8,8 +8,8 @@ import { BASE_URL } from "../config/env.js";
 
 const router = express.Router();
 
-// POST /api/shorten - Create shortened URL (Auth Required)
-router.post("/shorten", requireAuth, async (req, res) => {
+// POST /api/shorten - Create shortened URL (Auth Optional)
+router.post("/shorten", optionalAuth, async (req, res) => {
   try {
     const { longUrl } = req.body;
 
@@ -21,30 +21,32 @@ router.post("/shorten", requireAuth, async (req, res) => {
 
     const validatedUrl = urlValidation.url;
 
-    // Check for existing link (dedupe policy) - user is guaranteed to be authenticated
-    const existingLink = await Link.findOne({
-      ownerId: req.userId,
-      longUrl: validatedUrl,
-    });
-
-    if (existingLink) {
-      return res.json({
-        shortUrl: `${BASE_URL}/${existingLink.shortCode}`,
-        shortCode: existingLink.shortCode,
-        longUrl: existingLink.longUrl,
-        totalClicks: existingLink.totalClicks,
-        createdAt: existingLink.createdAt,
-        linkId: existingLink._id,
-        isExisting: true,
+    // Check for existing link (dedupe policy) - only for authenticated users
+    if (req.userId) {
+      const existingLink = await Link.findOne({
+        ownerId: req.userId,
+        longUrl: validatedUrl,
       });
+
+      if (existingLink) {
+        return res.json({
+          shortUrl: `${BASE_URL}/${existingLink.shortCode}`,
+          shortCode: existingLink.shortCode,
+          longUrl: existingLink.longUrl,
+          totalClicks: existingLink.totalClicks,
+          createdAt: existingLink.createdAt,
+          linkId: existingLink._id,
+          isExisting: true,
+        });
+      }
     }
 
     // Generate unique short code
     const shortCode = await generateUniqueShortCode();
 
-    // Create new link - user is guaranteed to be authenticated
+    // Create new link - ownerId will be null for anonymous users
     const link = new Link({
-      ownerId: req.userId,
+      ownerId: req.userId || null,
       shortCode,
       longUrl: validatedUrl,
     });

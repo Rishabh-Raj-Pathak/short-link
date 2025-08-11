@@ -35,8 +35,7 @@ const NavBar = () => {
     return location.pathname.startsWith(path);
   };
 
-  // Early return after all hooks are called
-  if (!isAuthenticated) return null;
+  // Show navbar for all users, but with different content based on auth status
 
   return (
     <>
@@ -118,76 +117,128 @@ const NavBar = () => {
                   )}
                 </Link>
 
-                <Link
-                  to="/dashboard"
-                  className={`relative px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 group/nav ${
-                    isActive("/dashboard")
-                      ? "text-white bg-gradient-to-r from-[#8039DF] to-blue-600 shadow-lg"
-                      : "text-gray-600 hover:text-gray-900 hover:bg-white/80"
-                  }`}
-                >
-                  <span className="relative z-10 flex items-center space-x-2">
-                    <svg
-                      className="w-4 h-4"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
-                    </svg>
-                    <span>Dashboard</span>
-                  </span>
-                  {isActive("/dashboard") && (
-                    <div className="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-blue-400/20 rounded-xl animate-pulse"></div>
-                  )}
-                </Link>
+                {isAuthenticated && (
+                  <Link
+                    to="/dashboard"
+                    className={`relative px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 group/nav ${
+                      isActive("/dashboard")
+                        ? "text-white bg-gradient-to-r from-[#8039DF] to-blue-600 shadow-lg"
+                        : "text-gray-600 hover:text-gray-900 hover:bg-white/80"
+                    }`}
+                  >
+                    <span className="relative z-10 flex items-center space-x-2">
+                      <svg
+                        className="w-4 h-4"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+                      </svg>
+                      <span>Dashboard</span>
+                    </span>
+                    {isActive("/dashboard") && (
+                      <div className="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-blue-400/20 rounded-xl animate-pulse"></div>
+                    )}
+                  </Link>
+                )}
               </div>
 
               {/* User Section */}
               <div className="flex items-center space-x-4 ml-6">
-                {/* User Avatar & Info */}
-                <div className="flex items-center space-x-3 bg-white/60 backdrop-blur-sm rounded-2xl px-4 py-2 border border-white/40 shadow-lg group/user">
-                  {/* User Avatar */}
-                  <div className="relative">
-                    <div className="w-10 h-10 bg-gradient-to-br from-[#8039DF] to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg group-hover/user:shadow-xl transition-all duration-300 group-hover/user:scale-110">
-                      {user?.email?.charAt(0).toUpperCase()}
-                      {/* Online Status */}
-                      <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-white rounded-full animate-pulse"></div>
+                {isAuthenticated ? (
+                  <>
+                    {/* User Avatar & Info */}
+                    <div className="flex items-center space-x-3 bg-white/60 backdrop-blur-sm rounded-2xl px-4 py-2 border border-white/40 shadow-lg group/user">
+                      {/* User Avatar */}
+                      <div className="relative">
+                        <div className="w-10 h-10 bg-gradient-to-br from-[#8039DF] to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg group-hover/user:shadow-xl transition-all duration-300 group-hover/user:scale-110">
+                          {user?.email?.charAt(0).toUpperCase()}
+                          {/* Online Status */}
+                          <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-white rounded-full animate-pulse"></div>
+                        </div>
+                      </div>
+
+                      {/* User Info */}
+                      <div className="hidden lg:block">
+                        <p className="text-sm font-semibold text-gray-800 group-hover/user:text-purple-600 transition-colors duration-300">
+                          Welcome back!
+                        </p>
+                        <p className="text-xs text-gray-500 -mt-0.5 truncate max-w-32">
+                          {user?.email}
+                        </p>
+                      </div>
                     </div>
-                  </div>
 
-                  {/* User Info */}
-                  <div className="hidden lg:block">
-                    <p className="text-sm font-semibold text-gray-800 group-hover/user:text-purple-600 transition-colors duration-300">
-                      Welcome back!
-                    </p>
-                    <p className="text-xs text-gray-500 -mt-0.5 truncate max-w-32">
-                      {user?.email}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Logout Button */}
-                <button
-                  onClick={handleLogout}
-                  className="relative bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 transform hover:scale-105 hover:shadow-xl group/logout overflow-hidden"
-                >
-                  {/* Button Shine Effect */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover/logout:translate-x-[200%] transition-transform duration-700"></div>
-                  <span className="relative z-10 flex items-center space-x-2">
-                    <svg
-                      className="w-4 h-4"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
+                    {/* Logout Button */}
+                    <button
+                      onClick={handleLogout}
+                      className="relative bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 transform hover:scale-105 hover:shadow-xl group/logout overflow-hidden"
                     >
-                      <path
-                        fillRule="evenodd"
-                        d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    <span>Logout</span>
-                  </span>
-                </button>
+                      {/* Button Shine Effect */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover/logout:translate-x-[200%] transition-transform duration-700"></div>
+                      <span className="relative z-10 flex items-center space-x-2">
+                        <svg
+                          className="w-4 h-4"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                        <span>Logout</span>
+                      </span>
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    {/* Login Button */}
+                    <Link
+                      to="/login"
+                      className={`relative px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 transform hover:scale-105 ${
+                        isActive("/login")
+                          ? "text-white bg-gradient-to-r from-[#8039DF] to-blue-600 shadow-lg"
+                          : "text-gray-600 hover:text-gray-900 hover:bg-white/80 bg-white/60 backdrop-blur-sm border border-white/40 shadow-lg"
+                      }`}
+                    >
+                      <span className="relative z-10 flex items-center space-x-2">
+                        <svg
+                          className="w-4 h-4"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M3 3a1 1 0 011 1v12a1 1 0 01-1 1H4a1 1 0 01-1-1V4a1 1 0 011-1zm7.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L12.586 9H7a1 1 0 100 2h5.586l-1.293 1.293z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                        <span>Login</span>
+                      </span>
+                    </Link>
+
+                    {/* Signup Button */}
+                    <Link
+                      to="/signup"
+                      className="relative bg-gradient-to-r from-[#8039DF] to-blue-600 hover:from-[#6B2FC7] hover:to-blue-700 text-white px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 transform hover:scale-105 hover:shadow-xl group/signup overflow-hidden"
+                    >
+                      {/* Button Shine Effect */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover/signup:translate-x-[200%] transition-transform duration-700"></div>
+                      <span className="relative z-10 flex items-center space-x-2">
+                        <svg
+                          className="w-4 h-4"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
+                        </svg>
+                        <span>Sign Up</span>
+                      </span>
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
 
@@ -251,61 +302,111 @@ const NavBar = () => {
                 <span>Home</span>
               </Link>
 
-              <Link
-                to="/dashboard"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className={`flex items-center space-x-3 px-4 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                  isActive("/dashboard")
-                    ? "text-white bg-gradient-to-r from-[#8039DF] to-blue-600 shadow-lg"
-                    : "text-gray-600 hover:text-gray-900 hover:bg-white/80"
-                }`}
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
+              {isAuthenticated && (
+                <Link
+                  to="/dashboard"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`flex items-center space-x-3 px-4 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                    isActive("/dashboard")
+                      ? "text-white bg-gradient-to-r from-[#8039DF] to-blue-600 shadow-lg"
+                      : "text-gray-600 hover:text-gray-900 hover:bg-white/80"
+                  }`}
                 >
-                  <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
-                </svg>
-                <span>Dashboard</span>
-              </Link>
+                  <svg
+                    className="w-5 h-5"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+                  </svg>
+                  <span>Dashboard</span>
+                </Link>
+              )}
+
+              {!isAuthenticated && (
+                <>
+                  <Link
+                    to="/login"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`flex items-center space-x-3 px-4 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                      isActive("/login")
+                        ? "text-white bg-gradient-to-r from-[#8039DF] to-blue-600 shadow-lg"
+                        : "text-gray-600 hover:text-gray-900 hover:bg-white/80"
+                    }`}
+                  >
+                    <svg
+                      className="w-5 h-5"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M3 3a1 1 0 011 1v12a1 1 0 01-1 1H4a1 1 0 01-1-1V4a1 1 0 011-1zm7.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L12.586 9H7a1 1 0 100 2h5.586l-1.293 1.293z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>Login</span>
+                  </Link>
+
+                  <Link
+                    to="/signup"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`flex items-center space-x-3 px-4 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                      isActive("/signup")
+                        ? "text-white bg-gradient-to-r from-[#8039DF] to-blue-600 shadow-lg"
+                        : "text-gray-600 hover:text-gray-900 hover:bg-white/80"
+                    }`}
+                  >
+                    <svg
+                      className="w-5 h-5"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
+                    </svg>
+                    <span>Sign Up</span>
+                  </Link>
+                </>
+              )}
             </div>
 
             {/* Mobile User Section */}
-            <div className="border-t border-gray-200/50 pt-6">
-              {/* User Info */}
-              <div className="flex items-center space-x-3 px-4 py-3 bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-[#8039DF] to-blue-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg">
-                  {user?.email?.charAt(0).toUpperCase()}
-                  <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-white rounded-full"></div>
+            {isAuthenticated && (
+              <div className="border-t border-gray-200/50 pt-6">
+                {/* User Info */}
+                <div className="flex items-center space-x-3 px-4 py-3 bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-[#8039DF] to-blue-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg">
+                    {user?.email?.charAt(0).toUpperCase()}
+                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-white rounded-full"></div>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800">Welcome back!</p>
+                    <p className="text-sm text-gray-500 truncate">
+                      {user?.email}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-semibold text-gray-800">Welcome back!</p>
-                  <p className="text-sm text-gray-500 truncate">
-                    {user?.email}
-                  </p>
-                </div>
-              </div>
 
-              {/* Logout Button */}
-              <button
-                onClick={handleLogout}
-                className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white px-4 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
+                {/* Logout Button */}
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white px-4 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg"
                 >
-                  <path
-                    fillRule="evenodd"
-                    d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <span>Logout</span>
-              </button>
-            </div>
+                  <svg
+                    className="w-5 h-5"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  <span>Logout</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </nav>

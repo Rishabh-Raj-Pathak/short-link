@@ -51,7 +51,7 @@ router.post("/signup", async (req, res) => {
 
     // Return user profile (password excluded by toJSON method)
     res.status(201).json({
-      message: "Account created. You can log in now.",
+      message: "Account created successfully.",
       user: user.toJSON(),
       token, // Also return token for API clients
     });
@@ -88,7 +88,7 @@ router.post("/login", async (req, res) => {
     const user = await User.findOne({ email: email.toLowerCase().trim() });
     if (!user) {
       return res.status(401).json({
-        error: "Account doesn't exist. Please sign up.",
+        error: "Account doesn't exist. Please sign up to continue.",
         code: "USER_NOT_FOUND",
       });
     }

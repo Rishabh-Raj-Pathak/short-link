@@ -41,19 +41,32 @@ const Signup = () => {
   };
 
   const validateForm = () => {
-    // Basic validation
-    if (!formData.email || !formData.password || !formData.confirmPassword) {
-      setLocalError("Please fill in all fields");
+    // Normalize email
+    const normalizedEmail = formData.email.trim().toLowerCase();
+
+    // Basic validation - check each field individually for specific messages
+    if (!formData.email.trim()) {
+      setLocalError("Please enter your email.");
       return false;
     }
 
-    if (!formData.email.includes("@")) {
-      setLocalError("Please enter a valid email address");
+    if (!normalizedEmail.includes("@")) {
+      setLocalError("Invalid email address.");
+      return false;
+    }
+
+    if (!formData.password) {
+      setLocalError("Password must be at least 6 characters.");
       return false;
     }
 
     if (formData.password.length < 6) {
-      setLocalError("Password must be at least 6 characters long");
+      setLocalError("Password must be at least 6 characters.");
+      return false;
+    }
+
+    if (!formData.confirmPassword) {
+      setLocalError("Please confirm your password.");
       return false;
     }
 
@@ -76,7 +89,9 @@ const Signup = () => {
     setLocalError("");
 
     try {
-      const result = await signup(formData.email, formData.password);
+      // Use normalized email for API call
+      const normalizedEmail = formData.email.trim().toLowerCase();
+      const result = await signup(normalizedEmail, formData.password);
 
       if (result.success) {
         // Navigate to returnTo destination or dashboard

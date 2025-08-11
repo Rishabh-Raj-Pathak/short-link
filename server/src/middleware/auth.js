@@ -9,7 +9,7 @@ export const requireAuth = async (req, res, next) => {
     if (!token) {
       return res.status(401).json({
         ok: false,
-        msg: "Please log in",
+        msg: "Session expired. Please log in.",
       });
     }
 
@@ -21,7 +21,7 @@ export const requireAuth = async (req, res, next) => {
     if (!user) {
       return res.status(401).json({
         ok: false,
-        msg: "Please log in",
+        msg: "Session expired. Please log in.",
       });
     }
 
@@ -35,7 +35,7 @@ export const requireAuth = async (req, res, next) => {
 
     return res.status(401).json({
       ok: false,
-      msg: "Please log in",
+      msg: "Session expired. Please log in.",
     });
   }
 };

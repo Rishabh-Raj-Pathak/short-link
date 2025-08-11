@@ -42,14 +42,22 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Normalize email
+    const normalizedEmail = formData.email.trim().toLowerCase();
+
     // Basic validation
-    if (!formData.email || !formData.password) {
-      setLocalError("Please fill in all fields");
+    if (!formData.email.trim()) {
+      setLocalError("Please enter your email.");
       return;
     }
 
-    if (!formData.email.includes("@")) {
-      setLocalError("Please enter a valid email address");
+    if (!formData.password) {
+      setLocalError("Please enter your password.");
+      return;
+    }
+
+    if (!normalizedEmail.includes("@")) {
+      setLocalError("Invalid email address.");
       return;
     }
 
@@ -57,7 +65,7 @@ const Login = () => {
     setLocalError("");
 
     try {
-      const result = await login(formData.email, formData.password);
+      const result = await login(normalizedEmail, formData.password);
 
       if (result.success) {
         // Navigate to returnTo destination or dashboard

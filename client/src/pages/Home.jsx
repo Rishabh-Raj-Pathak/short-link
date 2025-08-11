@@ -40,14 +40,6 @@ const Home = () => {
   const handleShortenUrl = async (e) => {
     e.preventDefault();
 
-    // Check authentication first - redirect if not logged in
-    if (!isAuthenticated) {
-      showErrorToast("Please log in to shorten links");
-      const returnTo = location.pathname + location.search + location.hash;
-      navigate(`/login?returnTo=${encodeURIComponent(returnTo)}`);
-      return;
-    }
-
     if (!urlInput.trim()) {
       setError("Please enter a URL");
       return;
