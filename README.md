@@ -2,12 +2,18 @@
 
 ## 📹 Demo Video
 
-<video width="100%" controls autoplay muted loop>
-  <source src="./client/public/shorten-url-demo-video.mp4" type="video/mp4">
-  Your browser does not support the video tag. You can download the video <a href="./client/public/shorten-url-demo-video.mp4">here</a>.
-</video>
+> **🎥 Click the video below to watch the complete demo showcasing all application features:**
 
-_Complete walkthrough of the application features and functionality_
+https://github.com/user-attachments/assets/61aaa2c4-07c4-4802-b3dd-117333715a07
+
+**What you'll see in the demo:**
+
+- 🔗 URL shortening process with instant results
+- 📱 Automatic QR code generation and download
+- 🔐 User authentication and secure login
+- 📊 Interactive dashboard with analytics
+- 📈 Real-time click tracking and monthly charts
+- ✨ Beautiful UI animations and responsive design
 
 A modern, full-stack URL shortening platform built with the MERN stack. Transform long URLs into short, trackable links with comprehensive analytics, QR code generation, and a beautiful user interface.
 
