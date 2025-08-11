@@ -1,6 +1,13 @@
 # 🔗 URL Shortener - All-in-One Link Management Platform
 
-> **📹 Demo Video**: Check out [`shorten-url-demo-video.mp4`](./client/public/shorten-url-demo-video.mp4) in the `client/public/` folder for a complete walkthrough of the application features and functionality.
+## 📹 Demo Video
+
+<video width="100%" controls autoplay muted loop>
+  <source src="./client/public/shorten-url-demo-video.mp4" type="video/mp4">
+  Your browser does not support the video tag. You can download the video <a href="./client/public/shorten-url-demo-video.mp4">here</a>.
+</video>
+
+_Complete walkthrough of the application features and functionality_
 
 A modern, full-stack URL shortening platform built with the MERN stack. Transform long URLs into short, trackable links with comprehensive analytics, QR code generation, and a beautiful user interface.
 
